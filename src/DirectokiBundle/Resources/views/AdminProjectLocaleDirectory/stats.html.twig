@@ -1,0 +1,55 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+        <li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li><a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+        <li>Fields</li>
+    </ol>
+
+
+	<h1>Stats</h1>
+
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Statistic</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>Records Published</td>
+                <td>{{ recordsPublished }}</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Records Draft</td>
+                <td>{{ recordsDraft }}</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Records Deleted</td>
+                <td>{{ recordsDeleted }}</td>
+                <td>&nbsp;</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+{%  endblock %}

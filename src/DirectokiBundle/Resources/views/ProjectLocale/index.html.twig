@@ -1,0 +1,51 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+        <li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li class="active">Locale: {{  locale.title }}</li>
+	</ol>
+
+	<h1>Locale: {{  locale.title }}</h1>
+
+
+	{%  if  directories %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Directory</th>
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for directory in directories %}
+				<tr>
+					<td>
+						{{  directory.titlePlural }}
+					</td>
+					<td>
+						<a href="{{  path('directoki_project_locale_directory_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">View</a>
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+
+		<a href="{{  path('directoki_project_locale_map', { 'projectId':project.publicId,'localeId':locale.publicId }) }}" class="btn btn-default">Map</a>
+	{% else %}
+		<p>You have no directories</p>
+	{% endif %}
+
+
+
+{%  endblock %}

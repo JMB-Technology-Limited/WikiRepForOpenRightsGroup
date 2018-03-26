@@ -1,0 +1,29 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.section-wrapper {
+    border-bottom: 1px solid black;
+}
+
+.section {
+    padding: 10px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.section  .information-point {
+    padding: 10px 0;
+    font-family: Arial, sans-serif;
+}

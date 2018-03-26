@@ -1,0 +1,26 @@
+services:
+    directoki.pre_persist.listener:
+        class: DirectokiBundle\EventListener\PrePersistEventListener
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+    directoki_field_type_service:
+        class: DirectokiBundle\Service\FieldTypeService
+        arguments: ["@service_container"]
+    directoki_event_builder_service:
+        class: DirectokiBundle\Service\EventBuilderService
+        arguments: ["@service_container"]
+    directoki.project_voter:
+        class: DirectokiBundle\Security\ProjectVoter
+        tags:
+            - { name: security.voter }
+        # needs to be public as internal API checks it
+        public: true
+        arguments: ["@service_container"]
+    directoki.twig.directory:
+        class: DirectokiBundle\Twig\DirectoryExtension
+        tags:
+            - { name: twig.extension }
+        arguments: ["@service_container"]
+    directoki.time_service:
+        class: DirectokiBundle\Service\TimeService
+

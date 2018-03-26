@@ -1,0 +1,26 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+	<h1>New Project</h1>
+
+	<form class="styled" action="" method="post">
+		{{ form_errors(form) }}
+
+		{{ form_rest(form) }}
+
+		<input type="submit" value="Save" />
+
+	</form>
+
+{%  endblock %}

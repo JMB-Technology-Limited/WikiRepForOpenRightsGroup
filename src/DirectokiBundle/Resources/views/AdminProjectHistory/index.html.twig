@@ -1,0 +1,334 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+        <li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li class="active">History: {{  event.id }}</li>
+    </ol>
+
+    <h1>History: {{   event.id }}</h1>
+
+
+
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>
+                    Comment
+                </td>
+                <td>
+                   {{  event.comment | nl2br }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    User
+                </td>
+                <td>
+                   {%  if event.user %}{{  event.user.username  }}{%  endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact
+                </td>
+                <td>
+                   {%  if event.contact %}{{  event.contact.email  }}{%  endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    IP
+                </td>
+                <td>
+                   {{  event.ip }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Useragent
+                </td>
+                <td>
+                   {{  event.userAgent }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Date
+                </td>
+                <td>
+                    {{  event.createdAt | date('r') }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+    {%  if  localesCreated %}
+        <h2>Locales Created</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Locale</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for localeCreated in localesCreated %}
+                    <tr>
+                        <td>
+                            {{  localeCreated.publicId }}
+                        </td>
+                        <td>
+                            {{ localeCreated.title  }}
+                        </td>
+                    </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {%  if  directoriesCreated %}
+        <h2>Directories Created</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Directory</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for directoryCreated in directoriesCreated %}
+                    <tr>
+                        <td>
+                            {{  directoryCreated.publicId }}
+                        </td>
+                        <td>
+                            {{ directoryCreated.titleSingular  }}
+                        </td>
+                        <td>
+                            <a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directoryCreated.publicId }) }}" class="btn btn-default">View</a>
+                        </td>
+                    </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+
+    {%  if  fieldsCreated %}
+        <h2>Fields Created</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Directory</th>
+                    <th>Id</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for fieldCreated in fieldsCreated %}
+                    <tr>
+                        <td>
+                            {{  fieldCreated.directory.titleSingular }}
+                        </td>
+                        <td>
+                            {{ fieldCreated.publicId  }}
+                        </td>
+                        <td>
+                            {{ fieldCreated.title  }}
+                        </td>
+                    </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {%  if  selectValuesCreated %}
+        <h2>Select Values Created</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Directory</th>
+                    <th>Field</th>
+                    <th>id</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for selectValueCreated in selectValuesCreated %}
+                    <tr>
+                        <td>
+                            {{  selectValueCreated.field.directory.titleSingular }}
+                        </td>
+                        <td>
+                            {{  selectValueCreated.field.title }}
+                        </td>
+                        <td>
+                            {{ selectValueCreated.publicId  }}
+                        </td>
+                        <td>
+                            {{ selectValueCreated.title  }}
+                        </td>
+                    </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+
+    {%  if  recordsCreated %}
+        <h2>Records Created</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Directory</th>
+                    <th>Id</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for recordCreated in recordsCreated %}
+                    <tr>
+                        <td>
+                            {{ recordCreated.directory.titleSingular  }}
+                        </td>
+                        <td>
+                            {{  recordCreated.publicId }}
+                        </td>
+                        <td>
+                            <a href="{{  path('directoki_admin_project_locale_directory_record_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':recordCreated.directory.publicId, 'recordId':recordCreated.publicId }) }}" class="btn btn-default">View</a>
+                        </td>
+                    </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {%  if  recordStates %}
+        <h2>Records State</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Record</th>
+                    <th>State</th>
+                    <th>Proposed</th>
+                    <th>Accepted</th>
+                    <th>Refused</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for recordState in recordStates %}
+                    <tr>
+                        <td>
+                            {{ recordState.record.publicId }}
+                        </td>
+                        <td>
+                            {{  recordState.state }}
+                        </td>
+                        <td>
+                            {% if recordState.creationEvent %}
+                                {% if recordState.creationEvent == event  %}
+                                    This History
+                                {%  else %}
+                                    <a href="{{  path('directoki_admin_project_history_show', { 'projectId':project.publicId,'historyId':recordState.creationEvent.id, }) }}">
+                                        History {{ recordState.creationEvent.id }}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if recordState.approvalEvent  %}
+                                {% if recordState.approvalEvent == event  %}
+                                    This History
+                                {%  else %}
+                                    <a href="{{  path('directoki_admin_project_history_show', { 'projectId':project.publicId,'historyId':recordState.approvalEvent.id, }) }}">
+                                        History {{ recordState.approvalEvent.id }}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if recordState.refusalEvent  %}
+                                {% if recordState.refusalEvent == event  %}
+                                    This History
+                                {%  else %}
+                                    <a href="{{  path('directoki_admin_project_history_show', { 'projectId':project.publicId,'historyId':recordState.refusalEvent.id, }) }}">
+                                        History {{ recordState.refusalEvent.id }}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{  path('directoki_admin_project_locale_directory_record_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':recordState.record.directory.publicId, 'recordId':recordState.record.publicId }) }}" class="btn btn-default">View</a>
+                        </td>
+                    </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {%  if reportsCreated %}
+        <h2>Reports Received</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Record</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%  for reportCreated in reportsCreated %}
+                <tr>
+                    <td>
+                        {{  reportCreated.record.publicId }}
+                    </td>
+                    <td>
+                        <a href="{{  path('directoki_admin_project_locale_directory_record_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':reportCreated.record.directory.publicId, 'recordId':reportCreated.record.publicId }) }}" class="btn btn-default">View</a>
+                    </td>
+                </tr>
+            {%  endfor %}
+            </tbody>
+        </table>
+    {%  endif %}
+
+    {%  if reportsResolved %}
+        <h2>Reports Resolved</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Record</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%  for reportResolved in reportsResolved %}
+                <tr>
+                    <td>
+                        {{  reportResolved.record.publicId }}
+                    </td>
+                    <td>
+                        <a href="{{  path('directoki_admin_project_locale_directory_record_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':reportResolved.record.directory.publicId, 'recordId':reportResolved.record.publicId }) }}" class="btn btn-default">View</a>
+                    </td>
+                </tr>
+            {%  endfor %}
+            </tbody>
+        </table>
+    {%  endif %}
+
+
+{%  endblock %}

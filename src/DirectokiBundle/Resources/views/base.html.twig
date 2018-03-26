@@ -1,0 +1,104 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}Home{% endblock %} | Directoki </title>
+	{% stylesheets '@bootstrap_css' '@directoki_css' %}
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
+	{% endstylesheets %}
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+</head>
+
+<body role="document">
+
+{# This is going at top above content so some templates can use document.onready #}
+{% javascripts '@jquery' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ path('directoki_homepage') }}">Directoki</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+
+			<ul class="nav navbar-nav">
+				<li><a href="{{ path('directoki_project_list') }}">Projects</a></li>
+				<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+
+				{% block navigation %}
+				{% endblock %}
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+					<li>{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</li>
+					<li><a href="{{ path('fos_user_security_logout') }}">
+							{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+						</a></li>
+				{% else %}
+					<li class="pull-right"><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
+					<li class="pull-right"><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
+				{%  endif %}
+			</ul>
+
+		</div><!--/.nav-collapse -->
+	</div>
+</nav>
+
+<div class="container theme-showcase" role="main">
+
+	{% for flashMessage in app.session.flashbag.get('notice') %}
+		<div class="alert alert-info">
+			{{ flashMessage }}
+		</div>
+	{% endfor %}
+	{% for flashMessage in app.session.flashbag.get('error') %}
+		<div class="alert alert-danger">
+			{{ flashMessage }}
+		</div>
+	{% endfor %}
+
+	{% if directoki_read_only %}
+		<div class="alert alert-danger">
+			The site is currently read only. You can not make any changes.
+		</div>
+	{% endif %}
+
+	{% block main %}{% endblock %}
+
+
+	{% block footer %}
+		<div id="footer">
+			Directoki
+		</div>
+	{% endblock %}
+
+</div> <!-- /container -->
+
+
+
+{% javascripts '@bootstrap_js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+{% block javascript %}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li class="active">Map</li>
+    </ol>
+
+    <h1>Map</h1>
+
+    <div id="Map" style="width: 100%; height: 500px"></div>
+
+    <ul>
+        {%  for field in fields %}
+            <li>
+                <label>
+                    <input type="checkbox" name="field" value="directory-{{ field.directory.publicId }}-field-{{ field.publicId }}" checked="checked" disabled="disabled">
+                    {{ field.directory.titlePlural }} - {{ field.title }}
+                </label>
+            </li>
+        {%  endfor %}
+    </ul>
+
+
+{%  endblock %}
+
+{%  block javascript %}
+
+    <script>
+        var map;
+        $(document).ready(function() {
+            map =  L.map('Map').setView([55,3], 6);
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+
+            loadData();
+        });
+
+        function loadData() {
+            var fields = [];
+            $('input[type="checkbox"][name="field"]').each(function(index, value) {
+                var $value = $(value);
+                if ($value.prop( "checked" )) {
+                    fields.push($value.val());
+                }
+            });
+
+            $.ajax({
+                'url': '{{ path('directoki_project_locale_map_data', { 'projectId':project.publicId,'localeId':locale.publicId }) }}?fields=' +  fields.join(','),
+                'success': function(data) {
+                    for(var key in data.data) {
+                        for(var i in data.data[key].records) {
+                            var valueData = data.data[key].records[i];
+                            L.marker([valueData.lat, valueData.lng])
+                                .addTo(map)
+                                .bindPopup('<a href="' + valueData.url +'">Record</a>');
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+
+{%  endblock %}

@@ -1,0 +1,57 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+        <li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li>Histories</li>
+    </ol>
+
+    <h1>Histories</h1>
+
+
+
+    {%  if  histories %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Coment</th>
+                <th>Date</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%  for history in histories %}
+                <tr>
+                    <td>
+                        {{  history.id }}
+                    </td>
+                    <td>
+                        {{  history.comment | nl2br }}
+                    </td>
+                    <td>
+                        {{  history.createdAt | date('r') }}
+                    </td>
+                    <td>
+                        <a href="{{  path('directoki_admin_project_history_show', { 'projectId':project.publicId,'historyId':history.id, }) }}" class="btn btn-default">View</a>
+                    </td>
+                </tr>
+            {%  endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have no history</p>
+    {% endif %}
+
+{%  endblock %}

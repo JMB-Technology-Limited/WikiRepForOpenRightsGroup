@@ -1,0 +1,50 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_directory_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_directory_record_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}">Record: {{  record.publicId }}</a></li>
+        <li class="active">Report</li>
+    </ol>
+
+    <h1>Report Record: {{   record.publicId }}</h1>
+
+
+    <form class="styled" action="" method="post">
+        {{ form_errors(form) }}
+
+        {{  form_row(form['description']) }}
+
+        {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+            {{  form_row(form['email']) }}
+
+            <p>We will keep you up to date about this record. (Optional)</p>
+
+            {{  form_row(form['human']) }}
+
+            <p>Please prove you are human.</p>
+
+        {%  endif %}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Save" />
+
+    </form>
+
+
+{%  endblock %}

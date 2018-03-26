@@ -1,0 +1,31 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li class="active">Directory: {{  directory.titlePlural }}</li>
+	</ol>
+
+	<h1>Directory: {{  directory.titlePlural }}</h1>
+
+
+
+	<a href="{{  path('directoki_admin_project_locale_directory_record_list', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">Records</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_record_list_needing_attention', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">Records Needing Attention</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_fields', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">Fields</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_record', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Record</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_stats', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">Stats</a>
+
+{%  endblock %}

@@ -1,0 +1,227 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_record_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}">Record: {{  record.publicId }}</a></li>
+		<li class="active">Moderate</li>
+	</ol>
+
+	<h1>Moderate Record: {{   record.publicId }}</h1>
+
+	<form method="post" class="styled">
+
+		<h2>State</h2>
+
+		{% if recordHasStates %}
+			<div>
+				Current Value:
+			</div>
+			<div class="well">
+				{%  if state.stateDraft %}
+					Draft
+				{%  elseif state.statePublished %}
+					Published
+				{%  elseif state.stateDeleted %}
+					Deleted
+				{%  endif %}
+			</div>
+
+			<table class="table table-striped">
+				<thead>
+				<tr>
+					<th>New Value</th>
+					<th>Comment</th>
+					<th>Details</th>
+					<th>&nbsp;</th>
+				</tr>
+				</thead>
+				<tbody>
+				{%  for recordHasState in recordHasStates %}
+					<tr>
+						<td>
+                            {%  if recordHasState.stateDraft %}
+								Draft
+                            {%  elseif recordHasState.statePublished %}
+								Published
+                            {%  elseif recordHasState.stateDeleted %}
+								Deleted
+                            {%  endif %}
+						</td>
+						<td>
+							{{  recordHasState.creationEvent.comment | nl2br }}
+						</td>
+						<td>
+							<div>{{ recordHasState.creationEvent.createdAt | date('r') }}</div>
+							{%  if recordHasState.creationEvent.contact %}<div>{{  recordHasState.creationEvent.contact.email }}</div>{%  endif %}
+							<div>{{ recordHasState.creationEvent.IP }}</div>
+							<div>{{ recordHasState.creationEvent.userAgent }}</div>
+						</td>
+						<td>
+							<div>
+								<label><input type="radio" name="state_{{ recordHasState.id }}" value="" checked="checked">Leave for later</label>
+							</div>
+							<div>
+								<label><input type="radio" name="state_{{ recordHasState.id }}" value="approve">Approve</label>
+							</div>
+							{%  if state.stateDraft and recordHasState.statePublished  %}
+								<div>
+									<label><input type="radio" name="state_{{ recordHasState.id }}" value="reject">Reject but leave as draft</label>
+								</div>
+								<div>
+									<label><input type="radio" name="state_{{ recordHasState.id }}" value="reject_and_delete">Delete Record</label>
+								</div>
+							{%  else %}
+								<div>
+									<label><input type="radio" name="state_{{ recordHasState.id }}" value="reject">Reject</label>
+								</div>
+							{%  endif %}
+						</td>
+					</tr>
+				{%  endfor %}
+				</tbody>
+			</table>
+		{%  else %}
+			<p>Nothing to Moderate</p>
+		{%  endif %}
+
+
+		{%  if  fields %}
+
+			{%  for field in fields %}
+				<h2>Field: {{  field.title }}</h2>
+
+				{% if  fieldValues[field.publicId] or fieldModerationsNeeded[field.publicId] %}
+
+					<div>
+						Current Value:
+					</div>
+					<div class="well">
+						{%  if fieldTypeService.getByField(field).isMultipleType %}
+							{%  for fv in fieldValuesCurrent[field.publicId] %}
+								<div>{% include fieldTypeService.getByField(field).viewTemplate with { value: fv , viewTemplateID: field.publicID ~ 'Current' ~ fv.id } %}</div>
+							{%  endfor %}
+						{%  else %}
+							{% include fieldTypeService.getByField(field).viewTemplate with { value: fieldValuesCurrent[field.publicId], viewTemplateID: field.publicID ~ 'Current' } %}
+						{%  endif %}
+					</div>
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th>Action</th>
+							<th>New Value</th>
+							<th>Comment</th>
+							<th>Details</th>
+							<th>&nbsp;</th>
+						</tr>
+						</thead>
+						<tbody>
+						{%  for fieldValue in fieldValues[field.publicId] %}
+							<tr>
+								<td>Set</td>
+								<td>
+									{% include fieldTypeService.getByField(field).viewTemplate with { value: fieldValue, viewTemplateID: field.publicID ~ 'New' ~ fieldValue.id } %}
+								</td>
+								<td>
+									{{  fieldValue.creationEvent.comment | nl2br }}
+								</td>
+								<td>
+									<div>{{ fieldValue.creationEvent.createdAt | date('r') }}</div>
+									{%  if fieldValue.creationEvent.contact %}<div>{{  fieldValue.creationEvent.contact.email }}</div>{%  endif %}
+									<div>{{ fieldValue.creationEvent.IP }}</div>
+									<div>{{ fieldValue.creationEvent.userAgent }}</div>
+								</td>
+								<td>
+									<div>
+										<label><input type="radio" name="field_{{ field.publicId }}_{{ fieldValue.id }}" value="" checked="checked">Leave for later</label>
+									</div>
+									<div>
+										<label><input type="radio" name="field_{{ field.publicId }}_{{ fieldValue.id }}" value="approve">Approve</label>
+									</div>
+									<div>
+										<label><input type="radio" name="field_{{ field.publicId }}_{{ fieldValue.id }}" value="reject">Reject</label>
+									</div>
+								</td>
+							</tr>
+						{%  endfor %}
+						{% for moderationNeeded in fieldModerationsNeeded[field.publicId] %}
+							<tr>
+								<td>{{  moderationNeeded.actionLabel }}</td>
+								<td>
+									{% include fieldTypeService.getByField(field).viewTemplate with { value: moderationNeeded.fieldValue, viewTemplateID: field.publicID ~ 'Moderate' ~ moderationNeeded.fieldValue.id  } %}
+								</td>
+								<td>
+									{{  moderationNeeded.event.comment | nl2br }}
+								</td>
+								<td>
+									<div>{{ moderationNeeded.event.createdAt | date('r') }}</div>
+									{%  if moderationNeeded.event.contact %}<div>{{  moderationNeeded.event.contact.email }}</div>{%  endif %}
+									<div>{{ moderationNeeded.event.IP }}</div>
+									<div>{{ moderationNeeded.event.userAgent }}</div>
+								</td>
+								<td>
+									<div>
+										<label><input type="radio" name="field_{{ field.publicId }}_{{ moderationNeeded.fieldValue.id }}" value="" checked="checked">Leave for later</label>
+									</div>
+									<div>
+										<label><input type="radio" name="field_{{ field.publicId }}_{{ moderationNeeded.fieldValue.id }}" value="approve">Approve</label>
+									</div>
+									<div>
+										<label><input type="radio" name="field_{{ field.publicId }}_{{ moderationNeeded.fieldValue.id }}" value="reject">Reject</label>
+									</div>
+								</td>
+							</tr>
+						{%  endfor %}
+						</tbody>
+					</table>
+				{%  else %}
+					<p>Nothing to Moderate</p>
+				{%  endif %}
+			{%  endfor %}
+		{% else %}
+			<p>You have no fields</p>
+		{% endif %}
+
+		<div style="padding: 40px 0;">
+			<a href="#" onclick="approveAll(); return false;">Approve all</a>
+			<a href="#" onclick="rejectAll(); return false;">Reject all</a>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label" for="form_field_record">Comment</label>
+			<textarea id="form_field_record" name="comment" class="form-control"></textarea>
+		</div>
+
+		<input type="submit" value="Save" class="btn btn-warning">
+
+	</form>
+
+{%  endblock %}
+
+
+{% block javascript %}
+	<script>
+		function approveAll() {
+			$('input[type="radio"][value="approve"]').prop('checked', true);
+		}
+		function rejectAll() {
+			$('input[type="radio"][value="reject"]').prop('checked', true);
+			$('input[type="radio"][value="reject_and_delete"]').prop('checked', true);
+		}
+	</script>
+
+{% endblock %}
+
+

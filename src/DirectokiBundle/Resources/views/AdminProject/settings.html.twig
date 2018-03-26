@@ -1,0 +1,63 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+        <li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li>Settings</li>
+    </ol>
+
+    <h1>Settings</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Project ID</td>
+                <td>{{  project.publicId }}</td>
+            </tr>
+            <tr>
+                <td>API Read Allowed</td>
+                <td>{% if project.APIReadAllowed %}Yes{%  else %}No{%  endif %}</td>
+            </tr>
+            <tr>
+                <td>API Moderated Edit Allowed</td>
+                <td>{% if project.APIModeratedEditAllowed %}Yes{%  else %}No{%  endif %}</td>
+            </tr>
+            <tr>
+                <td>API Report Allowed</td>
+                <td>{% if project.APIReportAllowed %}Yes{%  else %}No{%  endif %}</td>
+            </tr>
+            <tr>
+                <td>Web Read Allowed</td>
+                <td>{% if project.WebReadAllowed %}Yes{%  else %}No{%  endif %}</td>
+            </tr>
+            <tr>
+                <td>Web Moderated Edit Allowed</td>
+                <td>{% if project.WebModeratedEditAllowed %}Yes{%  else %}No{%  endif %}</td>
+            </tr>
+            <tr>
+                <td>Web Report Allowed</td>
+                <td>{% if project.WebReportAllowed %}Yes{%  else %}No{%  endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{  path('directoki_admin_project_settings_edit', { 'projectId':project.publicId  }) }}" class="btn btn-default">Edit</a>
+
+{%  endblock %}

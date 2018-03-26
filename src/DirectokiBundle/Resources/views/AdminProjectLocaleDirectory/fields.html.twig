@@ -1,0 +1,78 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+		<li>Fields</li>
+	</ol>
+
+	<h1>Fields</h1>
+
+
+	{%  if  fields %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Id</th>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Sort</th>
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for field in fields %}
+				<tr>
+					<td>
+						{{ field.publicId }}
+					</td>
+					<td>
+						{{  field.title }}
+					</td>
+					<td>
+						{{ fieldTypeService.getByField(field).label }}
+					</td>
+					<td>
+						{{ field.sort }}
+					</td>
+					<td>
+						{# TODO not great to hard code string here, can we get this from constant on class like everything else? #}
+						{%  if field.fieldType == 'multiselect' or field.fieldType == 'select' %}
+							<a href="{{  path('directoki_admin_project_locale_directory_field_select_values_list', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId,'fieldId':field.publicId }) }}" class="btn btn-default">Select Values</a>
+						{%  endif %}
+					</td>
+
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no fields</p>
+	{% endif %}
+
+	<a href="{{  path('directoki_admin_project_locale_directory_new_string_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New String Field (Single Line)</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_string_with_locale_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New String With Locale Field (Single Line)</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_text_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Text Field (Multi-line)</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_boolean_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Boolean Field</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_latlng_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Lat/Lng Field</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_email_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Email Field</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_url_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New URL Field</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_multi_select_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Multi Select Field</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_date_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Date Field</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_new_select_field', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New Select Field</a>
+
+
+{%  endblock %}

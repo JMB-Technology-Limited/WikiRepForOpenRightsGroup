@@ -1,0 +1,15 @@
+wr:
+    resource: "@WRBundle/Resources/config/routing.yml"
+    prefix:   /
+
+jmb_technology_user_accounts:
+    resource: "@JMBTechnologyUserAccountsBundle/Resources/config/routing.yml"
+    prefix:   /
+
+directoki:
+    resource: "@DirectokiBundle/Resources/config/routing.yml"
+    prefix:   /directoki/
+
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

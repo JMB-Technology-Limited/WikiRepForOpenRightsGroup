@@ -1,0 +1,119 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+		<li class="active">Record: {{  record.publicId }}</li>
+	</ol>
+
+	<h1>Record: {{   record.publicId }}</h1>
+
+	<p>
+		State:
+		{%  if state.stateDraft %}
+			Draft
+			<a href="{{  path('directoki_admin_project_locale_directory_record_state_edit_delete', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Delete</a>
+			<a href="{{  path('directoki_admin_project_locale_directory_record_state_edit_publish', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Publish</a>
+		{%  elseif state.statePublished %}
+			Published
+			<a href="{{  path('directoki_admin_project_locale_directory_record_state_edit_delete', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Delete</a>
+			<a href="{{  path('directoki_admin_project_locale_directory_record_state_edit_draft', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Make Draft</a>
+		{%  elseif state.stateDeleted %}
+			Deleted
+			<a href="{{  path('directoki_admin_project_locale_directory_record_state_edit_draft', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Make Draft</a>
+			<a href="{{  path('directoki_admin_project_locale_directory_record_state_edit_publish', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Publish</a>
+		{%  endif %}
+
+	</p>
+
+	{%  if  fields %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Field</th>
+				<th>Value</th>
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for field in fields %}
+				<tr>
+					<td>
+						{{  field.title }}
+					</td>
+					<td>
+						{%  if fieldTypeService.getByField(field).isMultipleType %}
+							{%  for fv in fieldValues[field.publicId] %}
+								<div>{% include fieldTypeService.getByField(field).viewTemplate with { value: fv, viewTemplateID: field.publicID ~ fv.id , locale: locale } %}</div>
+							{%  endfor %}
+						{%  else %}
+							{% include fieldTypeService.getByField(field).viewTemplate with { value: fieldValues[field.publicId], viewTemplateID: field.publicID  } %}
+						{%  endif %}
+					</td>
+					<td>
+						<a href="{{  path('directoki_admin_project_locale_directory_record_field_edit', { 'projectId':project.publicId, 'localeId':locale.publicId, 'directoryId':directory.publicId, 'recordId':record.publicId, 'fieldId':field.publicId }) }}">Edit</a>
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no fields</p>
+	{% endif %}
+
+	{%  if  reports %}
+		<ul>
+			{%  for report in reports %}
+				<li>
+					<div>
+						{{  report.description | nl2br }}
+					</div>
+					<div>
+						Reported on {{  report.createdAt|date("r") }}
+						{%  if report.creationEvent.contact %}
+							by {{ report.creationEvent.contact.email }}
+						{%  endif %}
+						{%  if report.resolvedAt %}
+						, resolved on {{  report.resolvedAt|date("r") }} by {{  report.resolutionEvent.user.username }}
+						{%  else %}
+							<a href="{{  path('directoki_admin_project_locale_directory_record_report_resolve', {'projectId':project.publicId, 'localeId':locale.publicId, 'directoryId':directory.publicId, 'recordId':record.publicId, 'reportId':report.id}) }}">Resolve!</a>
+						{%  endif %}
+					</div>
+				</li>
+			{%  endfor %}
+		</ul>
+	{% endif %}
+
+	{%  if  notes %}
+		<ul>
+			{%  for note in notes %}
+				<li>
+					<div>
+						{{  note.note | nl2br }}
+					</div>
+					<div>
+						By {{  note.createdBy.username }} on {{  note.createdAt|date("r") }}
+					</div>
+				</li>
+			{%  endfor %}
+		</ul>
+	{% endif %}
+
+	<a href="{{  path('directoki_admin_project_locale_directory_record_note_new', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">New Note</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_record_report_new', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">New Report</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_record_contacts', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Contacts</a>
+	<a href="{{  path('directoki_admin_project_locale_directory_record_moderate', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">Moderate</a>
+
+{%  endblock %}

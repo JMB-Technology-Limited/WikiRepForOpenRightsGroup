@@ -1,0 +1,49 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li class="active">Contacts</li>
+	</ol>
+
+	<h1>Contacts</h1>
+
+	{%  if  contacts %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Email</th>
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for contact in contacts %}
+				<tr>
+					<td>
+						{{  contact.email }}
+					</td>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no contacts</p>
+	{% endif %}
+
+
+
+{%  endblock %}

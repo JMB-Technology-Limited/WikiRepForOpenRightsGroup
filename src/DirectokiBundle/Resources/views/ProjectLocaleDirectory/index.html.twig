@@ -1,0 +1,31 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li class="active">Directory: {{  directory.titlePlural }}</li>
+	</ol>
+
+	<h1>Directory: {{  directory.titlePlural }}</h1>
+
+
+
+	<a href="{{  path('directoki_project_locale_directory_record_list', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">Records</a>
+
+
+	{% if project.WebModeratedEditAllowed %}
+	   <a href="{{  path('directoki_project_locale_directory_record_new', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}" class="btn btn-default">New</a>
+    {% endif %}
+
+{%  endblock %}

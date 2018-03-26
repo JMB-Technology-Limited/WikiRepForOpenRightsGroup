@@ -1,0 +1,87 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_record_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}">Record: {{  record.publicId }}</a></li>
+		<li>Lat/Lng Field: {{  field.title }}</li>
+		<li class="active">Edit</li>
+	</ol>
+
+	<h1>Record: {{  record.publicId }} Field: {{  field.title }}</h1>
+
+	<form id="ValueForm" class="styled" action="" method="post">
+		{{ form_errors(form) }}
+
+		<div id="ValueFormLat">
+			{{ form_row(form.lat) }}
+		</div>
+
+		<div id="ValueFormLng">
+			{{ form_row(form.lng) }}
+		</div>
+
+		<div id="fieldLatLngViewMap" style="width: 100%; height: 300px;"></div>
+
+		{{ form_rest(form) }}
+
+		<input type="submit" value="Save" />
+
+	</form>
+
+
+
+
+{%  endblock %}
+
+{% block javascript %}
+	<script>
+		var map;
+		var marker;
+		$(document).ready(function() {
+			var lat = $('#ValueForm input[name="latlng[lat]"]').val();
+			var lng = $('#ValueForm input[name="latlng[lng]"]').val();
+			map =  L.map('fieldLatLngViewMap');
+			if (lat && lng) {
+				map.setView([lat, lng], 10);
+				marker = L.marker([lat, lng]).addTo(map);
+			} else {
+				map.setView([55, 3], 5);
+			}
+			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(map);
+			map.on('click', onMapClick);
+		});
+
+		function onMapClick(e) {
+			var lat = e.latlng.lat;
+			var lng = e.latlng.lng;
+
+			if (!marker) {
+				marker = L.marker([lat, lng]);
+				marker.addTo(map);
+			} else {
+				marker.setLatLng( e.latlng );
+			}
+
+			$('#ValueFormLat input').val(lat);
+			$('#ValueFormLng input').val(lng);
+		}
+
+	</script>
+{% endblock %}

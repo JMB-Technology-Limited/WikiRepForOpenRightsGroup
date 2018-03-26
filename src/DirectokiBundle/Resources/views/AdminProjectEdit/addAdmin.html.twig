@@ -1,0 +1,33 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+    <ol class="breadcrumb">
+        <li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+        <li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li class="active">Add Admin</li>
+    </ol>
+
+    <h1>Project: {{  project.title }} Add Admin</h1>
+
+
+    <form class="styled" action="" method="post">
+        {{ form_errors(form) }}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Add Admin" />
+
+    </form>
+
+{%  endblock %}

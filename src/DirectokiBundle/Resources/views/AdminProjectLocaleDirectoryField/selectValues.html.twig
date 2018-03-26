@@ -1,0 +1,59 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_show', { 'projectId':project.publicId, 'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+		<li><a href="{{  path('directoki_admin_project_locale_directory_show', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+	</ol>
+
+	<h1>Select Values</h1>
+
+
+	{%  if  selectValues %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Id</th>
+				{%  for locale in locales|slice(0,5) %}
+					<th>Title ({{  locale.title }})</th>
+				{%  endfor %}
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for selectValue in selectValues %}
+				<tr>
+					<td>
+						{{ selectValue.publicId }}
+					</td>
+					{%  for locale in locales|slice(0,5) %}
+						<td>
+							{{  selectValue.getCachedTitleForLocale(locale) }}
+						</td>
+					{%  endfor %}
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no select values</p>
+	{% endif %}
+
+	<a href="{{  path('directoki_admin_project_locale_directory_field_new_select_value', { 'projectId':project.publicId, 'localeId':locale.publicId,'directoryId':directory.publicId, 'fieldId':field.publicId }) }}" class="btn btn-default">New Select Value</a>
+
+{%  endblock %}

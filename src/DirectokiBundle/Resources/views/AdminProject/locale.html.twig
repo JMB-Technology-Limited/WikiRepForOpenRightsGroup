@@ -1,0 +1,54 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+        <li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li class="active">Locales</li>
+    </ol>
+
+    <h1>Locales</h1>
+
+    {%  if  locales %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%  for locale in locales %}
+                <tr>
+                    <td>
+                        {{  locale.publicId }}
+                    </td>
+                    <td>
+                        {{  locale.title }}
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+            {%  endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have no locales</p>
+    {% endif %}
+
+    <a href="{{  path('directoki_admin_project_locale_new', { 'projectId':project.publicId  }) }}" class="btn btn-default">New Locale</a>
+
+
+{%  endblock %}

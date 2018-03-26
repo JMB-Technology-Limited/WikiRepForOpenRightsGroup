@@ -1,0 +1,24 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li class="active">Map</li>
+    </ol>
+
+    <h1>Map</h1>
+
+    <p>There are no map fields in this project.</p>
+
+{%  endblock %}

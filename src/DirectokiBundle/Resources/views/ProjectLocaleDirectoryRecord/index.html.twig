@@ -1,0 +1,62 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+        <li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_directory_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+		<li class="active">Record: {{  record.publicId }}</li>
+	</ol>
+
+	<h1>Record: {{   record.publicId }}</h1>
+
+	{%  if  fields %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Field</th>
+				<th>Value</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for field in fields %}
+				<tr>
+					<td>
+						{{  field.title }}
+					</td>
+					<td>
+						{%  if fieldTypeService.getByField(field).isMultipleType %}
+							{%  for fv in fieldValues[field.publicId] %}
+								<div>{% include fieldTypeService.getByField(field).viewTemplate with { value: fv, viewTemplateID: field.publicID ~ fv.id } %}</div>
+							{%  endfor %}
+						{%  else %}
+							{% include fieldTypeService.getByField(field).viewTemplate with { value: fieldValues[field.publicId], viewTemplateID: field.publicID  } %}
+						{%  endif %}
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no fields</p>
+	{% endif %}
+
+    {% if project.WebReportAllowed %}
+	    <a href="{{  path('directoki_project_locale_directory_record_report', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId,'recordId':record.publicId }) }}" class="btn btn-default">Report</a>
+	{% endif %}
+	{% if project.WebModeratedEditAllowed %}
+	   <a href="{{  path('directoki_project_locale_directory_record_edit', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId,'recordId':record.publicId }) }}" class="btn btn-default">Edit</a>
+    {% endif %}
+
+
+{%  endblock %}

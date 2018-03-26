@@ -1,0 +1,69 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+	<ol class="breadcrumb">
+		<li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_directory_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+        <li class="active">Records</li>
+	</ol>
+
+	<h1>Records</h1>
+
+    <form action="" method="get">
+        Search: <input type="text" name="search" value="{{  search|e('html_attr') }}">
+        <input type="Submit" value="Search">
+    </form>
+
+
+
+	{%  if  records %}
+		<table class="table table-striped">
+			<thead>
+            <tr>
+                <th>Id</th>
+                {%  if field %}<th>{{  field.title }}</th>{%  endif %}
+                <th>&nbsp;</th>
+            </tr>
+			</thead>
+			<tbody>
+			{%  for record in records %}
+				<tr>
+					<td>
+						{{  record.publicId }}
+					</td>
+                    {%  if field %}
+                        <td>
+                            {%  if fieldIsMultilple %}
+                                {%  for fv in fieldType.getLatestFieldValuesFromCache(field, record) %}
+                                    <div>{% include fieldTemplate with { value: fv, viewTemplateID: record.publicID ~ fv.id  } %}</div>
+                                {%  endfor %}
+                            {%  else %}
+                                {% include fieldTemplate with { value: fieldType.getLatestFieldValuesFromCache(field, record)[0], viewTemplateID: record.publicID  } %}
+                            {%  endif %}
+                        </td>
+                    {%  endif %}
+					<td>
+						<a href="{{  path('directoki_project_locale_directory_record_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId, 'recordId':record.publicId }) }}" class="btn btn-default">View</a>
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no records</p>
+	{% endif %}
+
+
+
+{%  endblock %}

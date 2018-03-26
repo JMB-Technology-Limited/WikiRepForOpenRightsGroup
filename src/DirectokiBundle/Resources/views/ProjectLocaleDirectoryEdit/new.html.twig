@@ -1,0 +1,59 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+
+    <ol class="breadcrumb">
+        <li><a href="{{  path('directoki_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_show', { 'projectId':project.publicId,'localeId':locale.publicId }) }}">Locale: {{  locale.title }}</a></li>
+        <li><a href="{{  path('directoki_project_locale_directory_show', { 'projectId':project.publicId,'localeId':locale.publicId,'directoryId':directory.publicId }) }}">Directory: {{  directory.titlePlural }}</a></li>
+        <li class="active">New</li>
+    </ol>
+
+    <h1>New {{ directory.titleSingular }}</h1>
+
+
+    <form class="styled" action="" method="post">
+        {{ form_errors(form) }}
+
+        {% for field in fields %}
+            <h2>{{ field.title }}</h2>
+            {% include fieldTypeService.getByField(field).getViewTemplatePublicNewRecordForm() with { field:field, form:form } %}
+        {% endfor %}
+
+        <h2>Misc</h2>
+
+        {{  form_row(form['comment']) }}
+
+        <p>Do you have any comments about this information for the moderators? (Optional)</p>
+
+        {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+            {{  form_row(form['email']) }}
+
+            <p>We will keep you up to date about this record. (Optional)</p>
+
+            {{  form_row(form['human']) }}
+
+            <p>Please prove you are human.</p>
+
+        {%  endif %}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Save" />
+
+    </form>
+
+
+{%  endblock %}

@@ -1,0 +1,57 @@
+{#
+#  @license 3-clause BSD
+#  @link https://github.com/Directoki/Directoki-Core/blob/master/LICENSE.txt
+#}
+
+
+{% extends 'DirectokiBundle::base.html.twig' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block main %}
+
+	<ol class="breadcrumb">
+		<li><a href="{{ path('directoki_admin_project_list') }}">Admin</a></li>
+		<li><a href="{{  path('directoki_admin_project_show', { 'projectId':project.publicId }) }}">Project: {{  project.title }}</a></li>
+		<li class="active">Users</li>
+	</ol>
+
+	<h1>Users</h1>
+
+	<div>Owner: {{  project.owner.username }}</div>
+
+
+	{%  if  projectAdmins %}
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Admin</th>
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+			<tbody>
+			{%  for projectAdmin in projectAdmins %}
+				<tr>
+					<td>
+						{{  projectAdmin.user.username }}
+					</td>
+					<td>
+						{% if project.owner == app.user %}
+							<form action="{{  path('directoki_admin_project_user_remove_admin', { 'projectId':project.publicId, 'user': projectAdmin.user.id  }) }}" method="post">
+								<input type="submit" class="btn btn-default" value="Remove Admin">
+							</form>
+						{% endif %}
+					</td>
+				</tr>
+			{%  endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>You have no admins</p>
+	{% endif %}
+
+    {% if project.owner == app.user %}
+		<a href="{{  path('directoki_admin_project_user_add_admin', { 'projectId':project.publicId  }) }}" class="btn btn-default">Add Admin</a>
+    {% endif %}
+
+{%  endblock %}
